@@ -1,0 +1,117 @@
+//motor one
+#define LV 10
+#define LB 9
+#define LF 8
+// motor two
+#define RV 5
+#define RB 6
+#define RF 7
+//infrared
+#define infrared_C 2
+#define infrared_L 3
+#define infrared_R 4
+int r=0,m=0,l=0;
+//hc-sr04
+#define trig 11
+#define echo 12
+//////////   
+#define LED_PIN 13  // 定義LED腳位
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  pinMode(infrared_C,INPUT);
+  pinMode(infrared_L,INPUT);
+  pinMode(infrared_R,INPUT);
+  pinMode (trig, OUTPUT);
+  pinMode (echo, INPUT);
+   pinMode(LB, OUTPUT);
+  pinMode(LF, OUTPUT);
+  pinMode(LV, OUTPUT);
+  pinMode(RV, OUTPUT);
+  pinMode(RB, OUTPUT);
+  pinMode(RF, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
+}
+
+const int inter_time = 1;
+void loop() {
+  // put your main code here, to run repeatedly:
+  //紅外線偵測
+   m=digitalRead(infrared_C);
+   r=digitalRead(infrared_R);
+   l=digitalRead(infrared_L);
+   if(l==0&&m==0&&r==0){//直行
+    motor_forward;
+   }
+   else if(l==1&&m==0&&r==1){//直行
+    motor_forward();
+   }
+   else if(l==1&&m==0&&r==0){//微微右轉
+    turn_right_slow();
+   }
+   else if(l==0&&m==0&&r==1){//微微左轉
+    turn_left_slow();
+   }
+   else if(l==1&&m==1&&r==0){//右轉
+    turn_right();
+   }
+   else if(l==0&&m==1&&r==1){//左轉
+    turn_left();
+    delay(10);
+   }
+   else if(l==1&&m==1&&r==1){//停止
+        motor_stop();
+   }
+}
+void motor_forward(void){//前進
+   digitalWrite(LB, LOW);
+   digitalWrite(LF, HIGH);
+   digitalWrite(RB, LOW);
+   digitalWrite(RF, HIGH);
+   analogWrite(RV, 110);
+   analogWrite(LV, 87);
+}
+void motor_back(void){//後退
+   digitalWrite(LB, HIGH);
+   digitalWrite(LF, LOW);
+   digitalWrite(RB, HIGH);
+   digitalWrite(RF, LOW);
+   analogWrite(RV, 100);
+   analogWrite(LV, 77);
+}
+void turn_left(void){//左轉
+  digitalWrite(LB, HIGH);
+   digitalWrite(LF, LOW);
+   digitalWrite(RB, LOW);
+   digitalWrite(RF, HIGH);
+   analogWrite(RV, 140);
+   analogWrite(LV, 70);
+}
+void turn_right(void){//右轉
+  digitalWrite(LB, LOW);
+   digitalWrite(LF, HIGH);
+   digitalWrite(RB, HIGH);
+   digitalWrite(RF, LOW);
+   analogWrite(RV, 93);
+   analogWrite(LV, 117);
+}
+void turn_left_slow(void){//微微的左轉
+  digitalWrite(LB, LOW);
+   digitalWrite(LF, HIGH);
+   digitalWrite(RB, LOW);
+   digitalWrite(RF, HIGH);
+   analogWrite(RV, 108);
+   analogWrite(LV, 80);
+}
+void turn_right_slow(void){//微微的右轉
+  digitalWrite(LB, LOW);
+   digitalWrite(LF, HIGH);
+   digitalWrite(RB, LOW);
+   digitalWrite(RF, HIGH);
+   analogWrite(RV, 103);
+   analogWrite(LV, 85);
+}
+void motor_stop(void){//停一下啊
+  analogWrite(RV, 0);
+  analogWrite(LV, 0);
+}
